@@ -1,4 +1,6 @@
-transformers
-datasets
-gradio
+transformers>=4.39.0
+datasets>=2.18.0
+gradio>=4.44.0
 torch
+pydub>=0.25.1
+pyaudioop>=0.1.0

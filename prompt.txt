@@ -1,0 +1,4 @@
+Please go thorugh the codebase and create a README.md file for the project.
+This Readme will be used for the Github pages.
+
+Post completion, I will push the code to Github.
