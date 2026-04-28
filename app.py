@@ -1,12 +1,14 @@
 import gradio as gr
-from transformers import AutoModelForQuestionAnswering, AutoTokenizer, pipeline
 
-model_name = "IProject-10/roberta-base-finetuned-squad2"
-nlp = pipeline("question-answering", model=model_name, tokenizer=model_name)
+from qa_engine import MODEL_NAME, QAEngine
+
+engine = QAEngine(model_name=MODEL_NAME)
+
 
 def predict(context, question):
-    res = nlp({"question": question, "context": context})
-    return res["answer"]
+    result = engine.predict(context=context, question=question)
+    answer = result["answer"]
+    return answer, result
 
 md = """
 ### Description
@@ -31,13 +33,19 @@ Add a context paragraphs upto 512 tokens and ask a question based on the context
 context = "The Amazon rainforest, also known in English as Amazonia or the Amazon Jungle, is a moist broadleaf forest that covers most of the Amazon basin of South America..."
 question = "Which continent is the Amazon rainforest in?"
 
-gr.Interface(
+demo = gr.Interface(
     predict,
     inputs=[
         gr.Textbox(lines=7, value=context, label="Context Paragraph"),
         gr.Textbox(lines=2, value=question, label="Question"),
     ],
-    outputs=gr.Textbox(label="Answer"),
+    outputs=[
+        gr.Textbox(label="Answer"),
+        gr.JSON(label="Prediction Details"),
+    ],
     title="Question & Answering with BERT using the SQuAD 2 dataset",
     description=md,
-).launch()
+)
+
+if __name__ == "__main__":
+    demo.launch()
